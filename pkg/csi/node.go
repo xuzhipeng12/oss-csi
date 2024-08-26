@@ -106,17 +106,15 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
 	mountCMD := "/usr/local/bin/ossfs xzpcsitest  " + target + " -ourl=oss-cn-hongkong.aliyuncs.com -opasswd_file=/etc/passwd-ossfs"
 	cmd := exec.Command("/bin/bash", "-c", mountCMD)
-	defer func() {
-		if err := recover(); err != nil {
-			klog.V(5).Infof("NodePublishVolume err:  %s", err.(string))
-			klog.V(5).Infof("NodePublishVolume cmd:  %s", cmd.String())
-
-		}
-	}()
+	//defer func() {
+	//	if err := recover(); err != nil {
+	//		klog.V(5).Infof("NodePublishVolume err:  %v", err)
+	//		klog.V(5).Infof("NodePublishVolume cmd:  %s", cmd.String())
+	//
+	//	}
+	//}()
 	output, err := cmd.CombinedOutput()
-	if err != nil {
-		panic(err)
-	}
+	klog.V(5).Infof("NodePublishVolume err:  %v", err)
 	fmt.Println(string(output))
 	// ossfs xzpcsitest /tmp/ossfs-1   -ourl=oss-cn-hongkong.aliyuncs.com
 
@@ -138,15 +136,16 @@ func (n *nodeService) NodeUnpublishVolume(ctx context.Context, request *csi.Node
 	cmd := exec.Command("/bin/bash", "-c", umountCMD)
 	defer func() {
 		if err := recover(); err != nil {
-			klog.V(5).Infof("NodeUnPublishVolume err:  %s", err.(string))
+			klog.V(5).Infof("NodePublishVolume err:  %v", err)
 			klog.V(5).Infof("NodeUnPublishVolume cmd:  %s", cmd.String())
 		}
 	}()
 	output, err := cmd.CombinedOutput()
-	if err != nil {
-		panic(err)
-	}
+	//if err != nil {
+	//	panic(err)
+	//}
 	fmt.Println(string(output))
+	klog.V(5).Infof("NodePublishVolume err:  %v", err)
 	return &csi.NodeUnpublishVolumeResponse{}, nil
 }
 
