@@ -33,6 +33,7 @@ var (
 )
 
 func main() {
+	flag.Parse()
 	if *version {
 		info, err := csi.GetVersionJSON()
 		if err != nil {
