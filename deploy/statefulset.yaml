@@ -35,6 +35,7 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
           image: xuzhipeng12/xzp-oss:0.1
+          imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 5
             httpGet:
