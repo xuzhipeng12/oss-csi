@@ -18,8 +18,6 @@ package csi
 
 import (
 	"context"
-	"k8s.io/klog"
-
 	"github.com/container-storage-interface/spec/lib/go/csi"
 )
 
@@ -29,7 +27,6 @@ type identityService struct {
 
 // GetPluginInfo returns the name and version of the plugin
 func (d *Driver) GetPluginInfo(ctx context.Context, request *csi.GetPluginInfoRequest) (*csi.GetPluginInfoResponse, error) {
-	klog.Infof("Driver: %v version %v ctx %v request %v", DriverName, ctx, request)
 	resp := &csi.GetPluginInfoResponse{
 		Name:          DriverName,
 		VendorVersion: "v1",
@@ -39,7 +36,6 @@ func (d *Driver) GetPluginInfo(ctx context.Context, request *csi.GetPluginInfoRe
 
 // GetPluginCapabilities returns the capabilities of the plugin
 func (d *Driver) GetPluginCapabilities(ctx context.Context, request *csi.GetPluginCapabilitiesRequest) (*csi.GetPluginCapabilitiesResponse, error) {
-	klog.Infof("Driver: %v version %v ctx %v request %v", DriverName, ctx, request)
 	resp := &csi.GetPluginCapabilitiesResponse{
 		Capabilities: []*csi.PluginCapability{
 			{
@@ -56,6 +52,5 @@ func (d *Driver) GetPluginCapabilities(ctx context.Context, request *csi.GetPlug
 
 // Probe returns the health and readiness of the plugin
 func (d *Driver) Probe(ctx context.Context, request *csi.ProbeRequest) (*csi.ProbeResponse, error) {
-	klog.Infof("Driver: %v version %v ctx %v request %v", DriverName, ctx, request)
 	return &csi.ProbeResponse{}, nil
 }
