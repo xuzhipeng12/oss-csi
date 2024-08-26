@@ -96,9 +96,7 @@ func (d *controllerService) ControllerGetCapabilities(ctx context.Context, reque
 // ControllerPublishVolume publish a volume
 func (d *controllerService) ControllerPublishVolume(ctx context.Context, request *csi.ControllerPublishVolumeRequest) (*csi.ControllerPublishVolumeResponse, error) {
 
-	pvInfo := map[string]string{"devicePath": "/dev/vda1"}
-	return &csi.ControllerPublishVolumeResponse{PublishContext: pvInfo}, nil
-	//return nil, status.Error(codes.Unimplemented, "")
+	return nil, status.Error(codes.Unimplemented, "")
 }
 
 // ControllerUnpublishVolume unpublish a volume

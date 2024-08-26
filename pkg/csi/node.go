@@ -18,6 +18,7 @@ package csi
 
 import (
 	"context"
+	"k8s.io/klog"
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"google.golang.org/grpc/codes"
@@ -112,6 +113,9 @@ func (n *nodeService) NodeUnpublishVolume(ctx context.Context, request *csi.Node
 	}
 
 	// TODO modify your volume umount logic here
+	volumeID := request.GetVolumeId()
+	klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
+	// ossfs xzpcsitest /tmp/ossfs-1   -ourl=oss-cn-hongkong.aliyuncs.com
 
 	return &csi.NodeUnpublishVolumeResponse{}, nil
 }

@@ -29,7 +29,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: registry.cn-hangzhou.aliyuncs.com/xuzhipeng-repo/xzp-oss:0.1
+          image: xuzhipeng12/xzp-oss:0.1
           lifecycle:
             preStop:
               exec:
