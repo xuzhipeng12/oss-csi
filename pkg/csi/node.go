@@ -40,9 +40,10 @@ var (
 
 type nodeService struct {
 	nodeID string
+	csi.NodeServer
 }
 
-var _ csi.NodeServer = &nodeService{}
+//var _ csi.NodeServer = &nodeService{}
 
 func newNodeService(nodeID string) nodeService {
 	return nodeService{

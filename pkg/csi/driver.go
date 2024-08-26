@@ -39,9 +39,9 @@ const (
 type Driver struct {
 	controllerService
 	nodeService
-
 	srv      *grpc.Server
 	endpoint string
+	csi.IdentityServer
 }
 
 // NewDriver creates a new driver
@@ -99,7 +99,7 @@ func ParseEndpoint(endpoint string) (string, string, error) {
 	case "tcp":
 	case "unix":
 		addr = path.Join("/", addr)
-		if err := os.Remove(addr); err != nil && !os.IsNotExist(err) {
+		if err := os.RemoveAll(addr); err != nil && !os.IsNotExist(err) {
 			return "", "", fmt.Errorf("could not remove unix domain socket %q: %v", addr, err)
 		}
 	default:

@@ -18,6 +18,7 @@ package csi
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"google.golang.org/grpc/codes"
@@ -30,9 +31,9 @@ var (
 	}
 )
 
-type controllerService struct{}
-
-var _ csi.ControllerServer = &controllerService{}
+type controllerService struct {
+	csi.ControllerServer
+}
 
 func newControllerService() controllerService {
 	return controllerService{}
@@ -63,14 +64,16 @@ func (d *controllerService) CreateVolume(ctx context.Context, request *csi.Creat
 	}
 
 	// TODO modify your createVolume logic here
+	fmt.Println("####  create  volume ", volume)
 
 	return &csi.CreateVolumeResponse{Volume: &volume}, nil
 }
 
 // DeleteVolume deletes a volume
 func (d *controllerService) DeleteVolume(ctx context.Context, request *csi.DeleteVolumeRequest) (*csi.DeleteVolumeResponse, error) {
+	fmt.Println("####delete  ctx", ctx)
+	fmt.Println("####delete  request", ctx)
 	// TODO modify your deleteVolume logic here
-
 	return nil, nil
 }
 
