@@ -104,6 +104,11 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 
 	// TODO modify your volume mount logic here
 	klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
+	mkmount := "mkdir -p " + target
+	mkmountCmd := exec.Command("/bin/bash", "-c", mkmount)
+	output, err := mkmountCmd.CombinedOutput()
+	klog.V(5).Infof("mkdir err:  %v", err)
+
 	mountCMD := "/usr/local/bin/ossfs xzpcsitest  " + target + " -ourl=oss-cn-hongkong.aliyuncs.com -opasswd_file=/etc/passwd-ossfs"
 	cmd := exec.Command("/bin/bash", "-c", mountCMD)
 	//defer func() {
@@ -113,7 +118,7 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	//
 	//	}
 	//}()
-	output, err := cmd.CombinedOutput()
+	output, err = cmd.CombinedOutput()
 	klog.V(5).Infof("NodePublishVolume err:  %v", err)
 	fmt.Println(string(output))
 	// ossfs xzpcsitest /tmp/ossfs-1   -ourl=oss-cn-hongkong.aliyuncs.com
