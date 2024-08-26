@@ -25,7 +25,7 @@ spec:
       containers:
         - args:
             - --endpoint=$(CSI_ENDPOINT)
-            - --logtostderr
+#            - --logtostderr
             - --nodeid=$(NODE_NAME)
           env:
             - name: CSI_ENDPOINT
