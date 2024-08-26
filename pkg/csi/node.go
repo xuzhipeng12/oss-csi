@@ -18,7 +18,9 @@ package csi
 
 import (
 	"context"
+	"fmt"
 	"k8s.io/klog"
+	"os/exec"
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"google.golang.org/grpc/codes"
@@ -101,6 +103,15 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	}
 
 	// TODO modify your volume mount logic here
+	klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
+	mountCMD := "/usr/local/bin/ossfs xzpcsitest  " + target + " -ourl=oss-cn-hongkong.aliyuncs.com -opasswd_file=/etc/passwd-ossfs"
+	cmd := exec.Command("/usr/bin", "-c", mountCMD)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(output))
+	// ossfs xzpcsitest /tmp/ossfs-1   -ourl=oss-cn-hongkong.aliyuncs.com
 
 	return &csi.NodePublishVolumeResponse{}, nil
 }
@@ -116,7 +127,13 @@ func (n *nodeService) NodeUnpublishVolume(ctx context.Context, request *csi.Node
 	volumeID := request.GetVolumeId()
 	klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
 	// ossfs xzpcsitest /tmp/ossfs-1   -ourl=oss-cn-hongkong.aliyuncs.com
-
+	umountCMD := "umount " + target
+	cmd := exec.Command("/usr/bin", "-c", umountCMD)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(output))
 	return &csi.NodeUnpublishVolumeResponse{}, nil
 }
 
