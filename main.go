@@ -45,7 +45,7 @@ func main() {
 	if *nodeID == "" {
 		klog.Fatalln("nodeID must be provided")
 	}
-
+	klog.Infof("endpoint: %v nodeID %v ", endpoint, nodeID)
 	drv := csi.NewDriver(*endpoint, *nodeID)
 	if err := drv.Run(); err != nil {
 		klog.Fatalln(err)

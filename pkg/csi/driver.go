@@ -39,9 +39,9 @@ const (
 type Driver struct {
 	controllerService
 	nodeService
+	identityService
 	srv      *grpc.Server
 	endpoint string
-	csi.IdentityServer
 }
 
 // NewDriver creates a new driver
