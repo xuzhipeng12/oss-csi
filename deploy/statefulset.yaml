@@ -34,7 +34,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: csi-image
+          image: registry.cn-hangzhou.aliyuncs.com/xuzhipeng-repo/xzp-oss:0.1
           livenessProbe:
             failureThreshold: 5
             httpGet:
