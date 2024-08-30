@@ -81,7 +81,9 @@ func (d *controllerService) CreateVolume(ctx context.Context, request *csi.Creat
 		AK:       ak,
 		SK:       sk,
 	}
+	m.client = m.NetCliten()
 	_ = m.CreateBucekt(bucektName)
+	_ = m.CreateDir(bucektName, volCtx["subPath"])
 	return &csi.CreateVolumeResponse{Volume: &volume}, nil
 }
 
