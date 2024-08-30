@@ -103,6 +103,11 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	}
 
 	// TODO modify your volume mount logic here
+	fmt.Println("###start mount")
+	fmt.Println(request)
+	fmt.Println(ctx)
+	fmt.Println("###end mount")
+
 	klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
 	mkmount := "mkdir -p " + target
 	mkmountCmd := exec.Command("/bin/bash", "-c", mkmount)
