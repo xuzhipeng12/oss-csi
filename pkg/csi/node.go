@@ -108,23 +108,33 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	fmt.Println(request)
 	fmt.Println(ctx)
 	fmt.Println("###end mount")
+	volCtx := request.GetVolumeContext()
+	endpoint := volCtx["endpoint"]
+	subPath := volCtx["subPath"]
+	bucektName := volCtx["bucektName"]
 
+	glbDir := "/var/lib/kubelet/csi-plugins/globalmount"
+	// mount global
+	mkglobal := "mkdir -p " + glbDir
+	mkmountCmd := exec.Command("/bin/bash", "-c", mkglobal)
+	output, err := mkmountCmd.CombinedOutput()
+
+	mountGlbCMD := "/usr/local/bin/ossfs " + bucektName + " " + glbDir + " -ourl=" + endpoint + " -opasswd_file=/etc/passwd-ossfs"
+	mkmountCmd = exec.Command("/bin/bash", "-c", mountGlbCMD)
+	output, err = mkmountCmd.CombinedOutput()
+
+	// mount subpath
 	klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
 	mkmount := "mkdir -p " + target
-	mkmountCmd := exec.Command("/bin/bash", "-c", mkmount)
-	output, err := mkmountCmd.CombinedOutput()
-	klog.V(5).Infof("mkdir err:  %v", err)
+	mkmountCmd = exec.Command("/bin/bash", "-c", mkmount)
+	output, err = mkmountCmd.CombinedOutput()
 
-	mountCMD := "/usr/local/bin/ossfs xzpcsitest  " + target + " -ourl=oss-cn-hongkong.aliyuncs.com -opasswd_file=/etc/passwd-ossfs"
-	cmd := exec.Command("/bin/bash", "-c", mountCMD)
-	//defer func() {
-	//	if err := recover(); err != nil {
-	//		klog.V(5).Infof("NodePublishVolume err:  %v", err)
-	//		klog.V(5).Infof("NodePublishVolume cmd:  %s", cmd.String())
-	//
-	//	}
-	//}()
-	output, err = cmd.CombinedOutput()
+	mountBind := "mount --bind " + glbDir + "/" + subPath + " " + target
+	mkmountCmd = exec.Command("/bin/bash", "-c", mountBind)
+	output, err = mkmountCmd.CombinedOutput()
+	//mountCMD := "/usr/local/bin/ossfs xzpcsitest  " + target + " -ourl=oss-cn-hongkong.aliyuncs.com -opasswd_file=/etc/passwd-ossfs"
+	//cmd := exec.Command("/bin/bash", "-c", mountCMD)
+	//output, err = cmd.CombinedOutput()
 	klog.V(5).Infof("NodePublishVolume err:  %v", err)
 	fmt.Println(string(output))
 	// ossfs xzpcsitest /tmp/ossfs-1   -ourl=oss-cn-hongkong.aliyuncs.com
