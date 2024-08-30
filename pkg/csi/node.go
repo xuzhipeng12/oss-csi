@@ -104,6 +104,7 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 
 	// TODO modify your volume mount logic here
 	fmt.Println("###start mount")
+	fmt.Println(request.GetVolumeContext())
 	fmt.Println(request)
 	fmt.Println(ctx)
 	fmt.Println("###end mount")
