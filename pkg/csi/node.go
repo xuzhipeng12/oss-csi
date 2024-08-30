@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"k8s.io/klog"
+	"os"
 	"os/exec"
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
@@ -111,6 +112,8 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	volCtx := request.GetVolumeContext()
 	endpoint := volCtx["endpoint"]
 	subPath := volCtx["subPath"]
+	ak := volCtx["ak"]
+	sk := volCtx["sk"]
 	bucektName := volCtx["bucektName"]
 
 	glbDir := "/var/lib/kubelet/csi-plugins/globalmount"
@@ -120,7 +123,13 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	output, err := mkmountCmd.CombinedOutput()
 	fmt.Println("ossfs mount:", output, err)
 
-	mountGlbCMD := "/usr/local/bin/ossfs " + bucektName + " " + glbDir + " -ourl=" + endpoint + "  -opasswd_file=/etc/passwd-ossfs"
+	passwdfile := "echo '" + bucektName + ":" + ak + ":" + sk + "' > /etc/passwd-" + bucektName
+	mkmountCmd = exec.Command("/bin/bash", "-c", passwdfile)
+	output, err = mkmountCmd.CombinedOutput()
+
+	_ = os.Chmod("/etc/passwd-"+bucektName, os.FileMode(0640))
+
+	mountGlbCMD := "/usr/local/bin/ossfs " + bucektName + " " + glbDir + " -ourl=" + endpoint + "  -opasswd_file=/etc/passwd-" + bucektName
 	fmt.Println(mountGlbCMD)
 	mkmountCmd = exec.Command("/bin/bash", "-c", mountGlbCMD)
 	output, err = mkmountCmd.CombinedOutput()
