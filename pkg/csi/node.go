@@ -127,7 +127,7 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	mkmountCmd = exec.Command("/bin/bash", "-c", passwdfile)
 	output, err = mkmountCmd.CombinedOutput()
 
-	_ = os.Chmod("/etc/passwd-"+bucektName, os.FileMode(0640))
+	_ = os.Chmod("/etc/passwd-"+bucektName, os.FileMode(0600))
 
 	mountGlbCMD := "/usr/local/bin/ossfs " + bucektName + " " + glbDir + " -ourl=" + endpoint + "  -opasswd_file=/etc/passwd-" + bucektName
 	fmt.Println(mountGlbCMD)
