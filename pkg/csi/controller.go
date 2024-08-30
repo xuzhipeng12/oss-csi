@@ -64,15 +64,24 @@ func (d *controllerService) CreateVolume(ctx context.Context, request *csi.Creat
 	}
 
 	// TODO modify your createVolume logic here
-	fmt.Println("####  create  volume ", volume)
+
+	fmt.Printf("#### start--- create  volume \n")
+	fmt.Println(request)
+	fmt.Println(ctx)
+	fmt.Println(request.Name)
+	fmt.Println(requiredCap)
+	fmt.Println(volCtx)
+	fmt.Printf("#### end--- create  volume")
 
 	return &csi.CreateVolumeResponse{Volume: &volume}, nil
 }
 
 // DeleteVolume deletes a volume
 func (d *controllerService) DeleteVolume(ctx context.Context, request *csi.DeleteVolumeRequest) (*csi.DeleteVolumeResponse, error) {
-	fmt.Println("####delete  ctx", ctx)
-	fmt.Println("####delete  request", ctx)
+	fmt.Println("####delete  ctx")
+	fmt.Println(request)
+	fmt.Println(ctx)
+	fmt.Println("####delete  request")
 	// TODO modify your deleteVolume logic here
 	return nil, nil
 }
