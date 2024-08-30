@@ -118,10 +118,13 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	mkglobal := "mkdir -p " + glbDir
 	mkmountCmd := exec.Command("/bin/bash", "-c", mkglobal)
 	output, err := mkmountCmd.CombinedOutput()
+	fmt.Println("ossfs mount:", output, err)
 
-	mountGlbCMD := "/usr/local/bin/ossfs " + bucektName + " " + glbDir + " -ourl=" + endpoint + " -opasswd_file=/etc/passwd-ossfs"
+	mountGlbCMD := "/usr/local/bin/ossfs " + bucektName + " " + glbDir + " -ourl=" + endpoint + "  -opasswd_file=/etc/passwd-ossfs"
+	fmt.Println(mountGlbCMD)
 	mkmountCmd = exec.Command("/bin/bash", "-c", mountGlbCMD)
 	output, err = mkmountCmd.CombinedOutput()
+	fmt.Println("ossfs mount:", output, err)
 
 	// mount subpath
 	klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
