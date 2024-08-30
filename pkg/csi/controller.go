@@ -72,7 +72,16 @@ func (d *controllerService) CreateVolume(ctx context.Context, request *csi.Creat
 	fmt.Println(requiredCap)
 	fmt.Println(volCtx)
 	fmt.Printf("#### end--- create  volume")
-
+	endpoint := volCtx["endpoint"]
+	ak := volCtx["ak"]
+	sk := volCtx["sk"]
+	bucektName := volCtx["bucektName"]
+	m := myoss{
+		Endpoint: endpoint,
+		AK:       ak,
+		SK:       sk,
+	}
+	_ = m.CreateBucekt(bucektName)
 	return &csi.CreateVolumeResponse{Volume: &volume}, nil
 }
 
