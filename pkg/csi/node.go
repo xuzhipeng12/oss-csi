@@ -127,9 +127,13 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	mkmountCmd := exec.Command("/bin/bash", "-c", passwdfile)
 	output, err := mkmountCmd.CombinedOutput()
 
+	mkmount := "mkdir -p " + target
+	mkmountCmd = exec.Command("/bin/bash", "-c", mkmount)
+	output, err = mkmountCmd.CombinedOutput()
+
 	_ = os.Chmod("/etc/passwd-"+bucektName, os.FileMode(0600))
 
-	mountSubCMD := "/usr/local/bin/ossfs " + bucektName + ":/" + subPath + " -ourl=" + endpoint + "  -opasswd_file=/etc/passwd-" + bucektName
+	mountSubCMD := "/usr/local/bin/ossfs " + bucektName + ":/" + subPath + " " + target + " -ourl=" + endpoint + "  -opasswd_file=/etc/passwd-" + bucektName
 	fmt.Println(mountSubCMD)
 	mkmountCmd = exec.Command("/bin/bash", "-c", mountSubCMD)
 	output, err = mkmountCmd.CombinedOutput()
@@ -137,9 +141,6 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 
 	//// mount subpath
 	//klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
-	//mkmount := "mkdir -p " + target
-	//mkmountCmd = exec.Command("/bin/bash", "-c", mkmount)
-	//output, err = mkmountCmd.CombinedOutput()
 	//
 	//mountBind := "mount --bind " + glbDir + "/" + subPath + " " + target
 	//mkmountCmd = exec.Command("/bin/bash", "-c", mountBind)
