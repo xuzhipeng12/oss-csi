@@ -116,39 +116,39 @@ func (n *nodeService) NodePublishVolume(ctx context.Context, request *csi.NodePu
 	sk := volCtx["sk"]
 	bucektName := volCtx["bucektName"]
 
-	glbDir := "/var/lib/kubelet/csi-plugins/globalmount"
-	// mount global
-	mkglobal := "mkdir -p " + glbDir
-	mkmountCmd := exec.Command("/bin/bash", "-c", mkglobal)
-	output, err := mkmountCmd.CombinedOutput()
-	fmt.Println("ossfs mount:", output, err)
+	//glbDir := "/var/lib/kubelet/csi-plugins/globalmount"
+	//// mount global
+	//mkglobal := "mkdir -p " + glbDir
+	//mkmountCmd := exec.Command("/bin/bash", "-c", mkglobal)
+	//output, err := mkmountCmd.CombinedOutput()
+	//fmt.Println("ossfs mount:", output, err)
 
 	passwdfile := "echo '" + bucektName + ":" + ak + ":" + sk + "' > /etc/passwd-" + bucektName
-	mkmountCmd = exec.Command("/bin/bash", "-c", passwdfile)
-	output, err = mkmountCmd.CombinedOutput()
+	mkmountCmd := exec.Command("/bin/bash", "-c", passwdfile)
+	output, err := mkmountCmd.CombinedOutput()
 
 	_ = os.Chmod("/etc/passwd-"+bucektName, os.FileMode(0600))
 
-	mountGlbCMD := "/usr/local/bin/ossfs " + bucektName + " " + glbDir + " -ourl=" + endpoint + "  -opasswd_file=/etc/passwd-" + bucektName
-	fmt.Println(mountGlbCMD)
-	mkmountCmd = exec.Command("/bin/bash", "-c", mountGlbCMD)
+	mountSubCMD := "/usr/local/bin/ossfs " + bucektName + ":/" + subPath + " -ourl=" + endpoint + "  -opasswd_file=/etc/passwd-" + bucektName
+	fmt.Println(mountSubCMD)
+	mkmountCmd = exec.Command("/bin/bash", "-c", mountSubCMD)
 	output, err = mkmountCmd.CombinedOutput()
 	fmt.Println("ossfs mount:", output, err)
 
-	// mount subpath
-	klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
-	mkmount := "mkdir -p " + target
-	mkmountCmd = exec.Command("/bin/bash", "-c", mkmount)
-	output, err = mkmountCmd.CombinedOutput()
-
-	mountBind := "mount --bind " + glbDir + "/" + subPath + " " + target
-	mkmountCmd = exec.Command("/bin/bash", "-c", mountBind)
-	output, err = mkmountCmd.CombinedOutput()
-	//mountCMD := "/usr/local/bin/ossfs xzpcsitest  " + target + " -ourl=oss-cn-hongkong.aliyuncs.com -opasswd_file=/etc/passwd-ossfs"
-	//cmd := exec.Command("/bin/bash", "-c", mountCMD)
-	//output, err = cmd.CombinedOutput()
-	klog.V(5).Infof("NodePublishVolume err:  %v", err)
-	fmt.Println(string(output))
+	//// mount subpath
+	//klog.V(5).Infof("NodePublishVolume: volume_id is %s", volumeID)
+	//mkmount := "mkdir -p " + target
+	//mkmountCmd = exec.Command("/bin/bash", "-c", mkmount)
+	//output, err = mkmountCmd.CombinedOutput()
+	//
+	//mountBind := "mount --bind " + glbDir + "/" + subPath + " " + target
+	//mkmountCmd = exec.Command("/bin/bash", "-c", mountBind)
+	//output, err = mkmountCmd.CombinedOutput()
+	////mountCMD := "/usr/local/bin/ossfs xzpcsitest  " + target + " -ourl=oss-cn-hongkong.aliyuncs.com -opasswd_file=/etc/passwd-ossfs"
+	////cmd := exec.Command("/bin/bash", "-c", mountCMD)
+	////output, err = cmd.CombinedOutput()
+	//klog.V(5).Infof("NodePublishVolume err:  %v", err)
+	//fmt.Println(string(output))
 	// ossfs xzpcsitest /tmp/ossfs-1   -ourl=oss-cn-hongkong.aliyuncs.com
 
 	return &csi.NodePublishVolumeResponse{}, nil
